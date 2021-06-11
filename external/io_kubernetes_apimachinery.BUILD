@@ -5,46 +5,46 @@ load("@com_google_googleapis_imports//:imports.bzl", "go_proto_library")
 
 proto_library(
     name = "intstr_proto",
-    strip_import_prefix = "apimachinery-0.22.0-alpha.3/",
+    strip_import_prefix = "apimachinery-0.22.0-alpha.4/",
     import_prefix = "k8s.io/apimachinery/",
     srcs = [
-        "apimachinery-0.22.0-alpha.3/pkg/util/intstr/generated.proto",
+        "apimachinery-0.22.0-alpha.4/pkg/util/intstr/generated.proto",
     ],
 )
 
 proto_library(
     name = "runtime_proto",
-    strip_import_prefix = "apimachinery-0.22.0-alpha.3/",
+    strip_import_prefix = "apimachinery-0.22.0-alpha.4/",
     import_prefix = "k8s.io/apimachinery/",
     srcs = [
-        "apimachinery-0.22.0-alpha.3/pkg/runtime/generated.proto",
+        "apimachinery-0.22.0-alpha.4/pkg/runtime/generated.proto",
     ],
 )
 
 proto_library(
     name = "runtime_schema_proto",
-    strip_import_prefix = "apimachinery-0.22.0-alpha.3/",
+    strip_import_prefix = "apimachinery-0.22.0-alpha.4/",
     import_prefix = "k8s.io/apimachinery/",
     srcs = [
-        "apimachinery-0.22.0-alpha.3/pkg/runtime/schema/generated.proto",
+        "apimachinery-0.22.0-alpha.4/pkg/runtime/schema/generated.proto",
     ],
 )
 
 proto_library(
     name = "resource_proto",
-    strip_import_prefix = "apimachinery-0.22.0-alpha.3/",
+    strip_import_prefix = "apimachinery-0.22.0-alpha.4/",
     import_prefix = "k8s.io/apimachinery/",
     srcs = [
-        "apimachinery-0.22.0-alpha.3/pkg/api/resource/generated.proto",
+        "apimachinery-0.22.0-alpha.4/pkg/api/resource/generated.proto",
     ],
 )
 
 proto_library(
     name = "meta_proto",
-    strip_import_prefix = "apimachinery-0.22.0-alpha.3/",
+    strip_import_prefix = "apimachinery-0.22.0-alpha.4/",
     import_prefix = "k8s.io/apimachinery/",
     srcs = [
-        "apimachinery-0.22.0-alpha.3/pkg/apis/meta/v1/generated.proto",
+        "apimachinery-0.22.0-alpha.4/pkg/apis/meta/v1/generated.proto",
     ],
     deps = [
         ":runtime_proto",
