@@ -1,0 +1,181 @@
+syntax = "proto3";
+
+package google.cloud.run.v1;
+
+import "google/cloud/run/v1/common.proto";
+import "k8s.io/apimachinery/pkg/apis/meta/v1/generated.proto";
+import "google/iam/v1/policy.proto";
+import "google/iam/v1/iam_policy.proto";
+import "google/api/field_behavior.proto";
+import "google/api/client.proto";
+
+option go_package = "google.golang.org/genproto/googleapis/cloud/run/v1;run";
+
+service Services {
+    option (google.api.default_host) = "run.googleapis.com";
+    option (google.api.oauth_scopes) = "https://www.googleapis.com/auth/cloud-platform";
+
+    // Create a service.
+    rpc CreateService(CreateServiceRequest) returns (Service) {}
+    // Get information about a service.
+    rpc GetService(GetServiceRequest) returns (Service) {}
+    // List services.
+    rpc ListServices(ListServicesRequest) returns (ListServicesResponse) {}
+    // Replace a service.
+    // Only the spec and metadata labels and annotations are modifiable. After the Update request, 
+    // Cloud Run will work to make the 'status' match the requested 'spec'.
+    // May provide metadata.resourceVersion to enforce update from last read for optimistic concurrency control.
+    rpc ReplaceService(ReplaceServiceRequest) returns (Service) {}
+    // Delete a service. This will cause the Service to stop serving traffic and will delete the child entities 
+    // like Routes, Configurations and Revisions.
+    rpc DeleteService(DeleteServiceRequest) returns (k8s.io.apimachinery.pkg.apis.meta.v1.Status) {}
+    // Returns permissions that a caller has on the specified Project.
+    // There are no permissions required for making this API call.
+    rpc TestIamPermissions(google.iam.v1.TestIamPermissionsRequest) returns (google.iam.v1.TestIamPermissionsResponse) {}
+    // Get the IAM Access Control policy currently in effect for the given Cloud Run service. 
+    // This result does not include any inherited policies.
+    rpc GetIamPolicy(google.iam.v1.GetIamPolicyRequest) returns (google.iam.v1.Policy) {}
+    // Sets the IAM Access control policy for the specified Service. Overwrites any existing policy.
+    rpc SetIamPolicy(google.iam.v1.SetIamPolicyRequest) returns (google.iam.v1.Policy) {}
+}
+
+message CreateServiceRequest {
+    // The namespace in which the service should be created. 
+    // For Cloud Run (fully managed), replace {namespace_id} with the project ID or number.
+    // Authorization requires the following IAM permission on the specified resource parent:
+    // run.services.create
+    string parent = 1 [
+        (google.api.field_behavior) = REQUIRED
+        ];
+    // The service instance to create.
+    Service service  = 2 [
+        (google.api.field_behavior) = REQUIRED
+        ];
+    // Indicates that the server should validate the request and populate default values without persisting the request. 
+    // Supported values: all
+    string dry_run = 3;
+}
+
+message Service {
+    // The API version for this call such as "serving.knative.dev/v1".
+    string api_version = 1;
+    // The kind of resource, in this case "Service".
+    string kind = 2;
+    // Metadata associated with this Service, including name, namespace, labels, and annotations.
+    // Cloud Run (fully managed) uses the following annotation keys to configure features on a Service:
+    // run.googleapis.com/ingress sets the ingress settings for the Service. 
+    // See the ingress settings documentation for details on configuring ingress settings.
+    // run.googleapis.com/ingress-status is output-only and contains the currently active ingress settings for the Service. 
+    // run.googleapis.com/ingress-status may differ from run.googleapis.com/ingress while the system is processing a change 
+    // to run.googleapis.com/ingress or if the system failed to process a change to run.googleapis.com/ingress. 
+    // When the system has processed all changes successfully run.googleapis.com/ingress-status and run.googleapis.com/ingress are equal.
+    k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 3;
+    // Spec holds the desired state of the Service (from the client).
+    ServiceSpec spec = 4;
+    // Status communicates the observed state of the Service (from the controller).
+    ServiceStatus status = 5;
+}
+
+message GetServiceRequest {
+    // The name of the service to retrieve. For Cloud Run (fully managed), replace {namespace_id} with the project ID or number.
+    // Authorization requires the following IAM permission on the specified resource name:
+    // run.services.get
+    string name = 1;
+}
+
+message ListServicesRequest {
+    // The namespace from which the services should be listed. For Cloud Run (fully managed), replace {namespace_id} with the project ID or number.
+    // Authorization requires the following IAM permission on the specified resource parent:
+    // run.services.list
+    string parent = 1;
+    // The maximum number of records that should be returned.
+    int32 page_size = 2;
+    // Not currently used by Cloud Run.
+    bool include_uninitialized = 3;
+    // Allows to filter resources based on a specific value for a field name. Send this in a query string format. i.e. 'metadata.name%3Dlorem'. 
+    // Not currently used by Cloud Run.
+    string field_selector = 4;
+    // Allows to filter resources based on a label. Supported operations are =, !=, exists, in, and notIn.
+    string label_selector = 5;
+    // The baseline resource version from which the list or watch operation should start. Not currently used by Cloud Run.
+    string resource_version = 6;
+    // Flag that indicates that the client expects to watch this resource as well. Not currently used by Cloud Run.
+    bool watch = 7;
+    // Optional encoded string to continue paging.
+    string page_token = 8;
+}
+
+message ListServicesResponse {
+    // The API version for this call such as "serving.knative.dev/v1".
+    string api_version = 1;
+    // The kind of this resource, in this case "ServiceList".
+    string kind = 2;
+    // Metadata associated with this Service list.
+    k8s.io.apimachinery.pkg.apis.meta.v1.ListMeta metadata = 3;
+    // List of Services.
+    repeated Service items = 4;
+    // Locations that could not be reached.
+    repeated string unreachable = 5;
+}
+
+message ReplaceServiceRequest {
+    // The name of the service being replaced. For Cloud Run (fully managed), replace {namespace_id} with the project ID or number.
+    // Authorization requires the following IAM permission on the specified resource name:
+    // run.services.update
+    string name = 1;
+    // The service object being replaced.
+    Service service = 2;
+    // Indicates that the server should validate the request and populate default values without persisting the request. 
+    // Supported values: all
+    string dry_run = 3;
+}
+
+message DeleteServiceRequest {
+    // The name of the service to delete. For Cloud Run (fully managed), replace {namespace_id} with the project ID or number.
+    // Authorization requires the following IAM permission on the specified resource name:
+    // run.services.delete
+    string name = 1;
+    // Specifies the propagation policy of delete. 
+    // Cloud Run currently ignores this setting, and deletes in the background. 
+    // Please see kubernetes.io/docs/concepts/workloads/controllers/garbage-collection/ for more information.
+    string propagation_policy = 2;
+    // Cloud Run currently ignores this parameter.
+    string kind = 3;
+    // Cloud Run currently ignores this parameter.
+    string api_version = 4;
+    // Indicates that the server should validate the request and populate default values without persisting the request. 
+    // Supported values: all
+    string dry_run = 5;
+}
+
+message ServiceSpec {
+    // Template holds the latest specification for the Revision to be stamped out.
+    RevisionTemplate template = 1;
+    // Traffic specifies how to distribute traffic over a collection of Knative Revisions and Configurations.
+    repeated TrafficTarget target = 2;
+}
+
+message ServiceStatus {
+    // ObservedGeneration is the 'Generation' of the Route that was last processed by the controller.
+    // Clients polling for completed reconciliation should poll until observedGeneration = metadata.generation 
+    // and the Ready condition's status is True or False.
+    int32 observed_generation = 1;
+    // Conditions communicates information about ongoing/complete reconciliation processes that bring the "spec" inline with the observed state 
+    // of the world. Service-specific conditions include: * "ConfigurationsReady": true when the underlying Configuration is ready. 
+    // * "RoutesReady": true when the underlying Route is ready. * "Ready": true when both the underlying Route and Configuration are ready.
+    repeated Condition conditions = 2;
+    // From ConfigurationStatus. LatestReadyRevisionName holds the name of the latest Revision stamped out from this Service's Configuration 
+    // that has had its "Ready" condition become "True".
+    string latest_ready_revision_name = 3;
+    // From ConfigurationStatus. LatestCreatedRevisionName is the last revision that was created from this Service's Configuration. 
+    // It might not be ready yet, for that use LatestReadyRevisionName.
+    string latest_created_revision_name = 4;
+    // From RouteStatus. Traffic holds the configured traffic distribution. These entries will always contain RevisionName references. 
+    // When ConfigurationName appears in the spec, this will hold the LatestReadyRevisionName that we last observed.
+    repeated TrafficTarget traffic = 5;
+    // From RouteStatus. URL holds the url that will distribute traffic over the provided traffic targets. 
+    // It generally has the form https://{route-hash}-{project-hash}-{cluster-level-suffix}.a.run.app
+    string url = 6;
+    // From RouteStatus. Similar to url, information on where the service is available on HTTP.
+    Addressable address = 7;
+}

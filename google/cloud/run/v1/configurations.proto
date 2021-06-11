@@ -1,0 +1,96 @@
+syntax = "proto3";
+
+package google.cloud.run.v1;
+
+import "google/cloud/run/v1/common.proto";
+import "k8s.io/apimachinery/pkg/apis/meta/v1/generated.proto";
+import "google/api/client.proto";
+
+option go_package = "google.golang.org/genproto/googleapis/cloud/run/v1;run";
+
+service Configurations {
+    option (google.api.default_host) = "run.googleapis.com";
+    option (google.api.oauth_scopes) = "https://www.googleapis.com/auth/cloud-platform";    
+
+    // Get information about a configuration.
+    rpc GetConfiguration(GetConfigurationRequest) returns (Configuration) {}
+    // List configurations.
+    rpc ListConfigurations(ListConfigurationsRequest) returns (ListConfigurationsResponse) {}
+}
+
+message GetConfigurationRequest {
+    // The name of the configuration to retrieve. For Cloud Run (fully managed), replace {namespace_id} with the project ID or number.
+    // Authorization requires the following IAM permission on the specified resource name:
+    // run.configurations.get
+    string name = 1;
+}
+
+message Configuration {
+    // The API version for this call such as "serving.knative.dev/v1".
+    string api_version = 1;
+    // The kind of resource, in this case always "Configuration"
+    string kind = 2;
+    // Metadata associated with this Configuration, including name, namespace, labels, and annotations.
+    k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 3;    
+    // Spec holds the desired state of the Configuration (from the client).
+    ConfigurationSpec spec = 4;
+    // Status communicates the observed state of the Configuration (from the controller).
+    ConfigurationStatus status = 5;
+}
+
+message ConfigurationSpec {
+    // Template holds the latest specification for the Revision to be stamped out.
+    RevisionTemplate template = 1;
+}
+
+message ConfigurationStatus {
+    // ObservedGeneration is the 'Generation' of the Configuration that was last processed by the controller. 
+    // The observed generation is updated even if the controller failed to process the spec and create the Revision.
+    // Clients polling for completed reconciliation should poll until observedGeneration = metadata.generation, 
+    // and the Ready condition's status is True or False.
+    int32 observed_generation = 1;
+    // LatestCreatedRevisionName is the last revision that was created from this Configuration. 
+    // It might not be ready yet, for that use LatestReadyRevisionName.
+    string latest_created_revision_name = 2;
+    // LatestReadyRevisionName holds the name of the latest 
+    // Revision stamped out from this Configuration that has had its "Ready" condition become "True".
+    string latest_ready_revision_name = 3;
+    // Conditions communicates information about ongoing/complete reconciliation processes that bring the "spec" 
+    // inline with the observed state of the world. 
+    repeated Condition conditions = 4;
+}
+
+message ListConfigurationsRequest {
+    // The namespace from which the configurations should be listed. For Cloud Run (fully managed), replace {namespace_id} with the project ID or number.
+    // Authorization requires the following IAM permission on the specified resource parent:
+    // run.configurations.list
+    string parent = 1;
+    // The maximum number of records that should be returned.
+    int32 page_size = 2;
+    // Not currently used by Cloud Run
+    bool include_uninitialized = 3;
+    // Allows to filter resources based on a specific value for a field name. Send this in a query string format. i.e. 'metadata.name%3Dlorem'. 
+    // Not currently used by Cloud Run.
+    string field_selector = 4;
+    // Allows to filter resources based on a label. Supported operations are =, !=, exists, in, and notIn.
+    string label_selector = 5;
+    // The baseline resource version from which the list or watch operation should start. Not currently used by Cloud Run.
+    string resource_version = 6;
+    // Flag that indicates that the client expects to watch this resource as well. Not currently used by Cloud Run.
+    bool watch = 7;
+    // Optional encoded string to continue paging.
+    string page_token = 8;    
+}
+
+message ListConfigurationsResponse {
+    // The API version for this call such as "serving.knative.dev/v1".
+    string api_version = 1;
+    // The kind of this resource, in this case "ConfigurationList".
+    string kind = 2;
+    // Metadata associated with this configuration list.
+    k8s.io.apimachinery.pkg.apis.meta.v1.ListMeta metadata = 3;
+    // List of Configurations.
+    repeated Configuration items = 4;
+    // Locations that could not be reached.
+    repeated string unreachable = 5;    
+}

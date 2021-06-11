@@ -1,0 +1,99 @@
+syntax = "proto3";
+
+package google.cloud.run.v1;
+
+import "google/cloud/run/v1/common.proto";
+import "k8s.io/apimachinery/pkg/apis/meta/v1/generated.proto";
+import "google/api/client.proto";
+
+option go_package = "google.golang.org/genproto/googleapis/cloud/run/v1;run";
+
+service Routes {
+    option (google.api.default_host) = "run.googleapis.com";
+    option (google.api.oauth_scopes) = "https://www.googleapis.com/auth/cloud-platform";
+
+    // Get information about a route.
+    rpc GetRoute(GetRouteRequest) returns (Route){}
+    // List routes.
+    rpc ListRoutes(ListRoutesRequest) returns (ListRoutesResponse){}
+}
+
+message GetRouteRequest {
+    // The name of the route to retrieve. For Cloud Run (fully managed), replace {namespace_id} with the project ID or number.
+    // Authorization requires the following IAM permission on the specified resource name:
+    // run.routes.get
+    string name = 1;
+}
+
+message Route {
+    // The API version for this call such as "serving.knative.dev/v1".
+    string api_version = 1;
+    // The kind of this resource, in this case always "Route".
+    string kind = 2;
+    // Metadata associated with this Route, including name, namespace, labels, and annotations.
+    k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 3;
+    // Spec holds the desired state of the Route (from the client).
+    RouteSpec spec = 4;
+    // Status communicates the observed state of the Route (from the controller).
+    RouteStatus status = 5;
+}
+
+message RouteSpec {
+    // Traffic specifies how to distribute traffic over a collection of Knative Revisions and Configurations. 
+    // Cloud Run currently supports a single configurationName.
+    repeated TrafficTarget target = 1;
+}
+
+message RouteStatus {
+    // ObservedGeneration is the 'Generation' of the Route that was last processed by the controller.
+    // Clients polling for completed reconciliation should poll until observedGeneration = metadata.generation and the Ready condition's status is True or False.
+    // Note that providing a trafficTarget that only has a configurationName will result in a Route that does not increment either its metadata.generation 
+    // or its observedGeneration, as new "latest ready" revisions from the Configuration are processed without an update to the Route's spec.
+    int32 observed_generation = 1;
+    // Conditions communicates information about ongoing/complete reconciliation processes that bring the "spec" inline with the observed state of the world.
+    repeated Condition conditions = 2;
+    // Traffic holds the configured traffic distribution. These entries will always contain RevisionName references. 
+    // When ConfigurationName appears in the spec, this will hold the LatestReadyRevisionName that we last observed.
+    repeated TrafficTarget traffic = 3;
+    // URL holds the url that will distribute traffic over the provided traffic targets. 
+    // It generally has the form: https://{route-hash}-{project-hash}-{cluster-level-suffix}.a.run.app
+    string url = 4;
+    // Similar to url, information on where the service is available on HTTP.
+    Addressable address = 5;
+}
+
+message ListRoutesRequest {
+    // The namespace from which the routes should be listed. For Cloud Run (fully managed), replace {namespace_id} with the project ID or number.
+    // Authorization requires the following IAM permission on the specified resource parent:
+    // run.routes.list
+    string parent = 1;
+    // The maximum number of records that should be returned.
+    int32 page_size = 2;
+    // Not currently used by Cloud Run.
+    bool include_uninitialized = 3;
+    // Allows to filter resources based on a specific value for a field name. 
+    // Send this in a query string format. i.e. 'metadata.name%3Dlorem'. Not currently used by Cloud Run.
+    string field_selector = 4;
+    // Allows to filter resources based on a label. Supported operations are =, !=, exists, in, and notIn.
+    string label_selector = 5;
+    // The baseline resource version from which the list or watch operation should start. Not currently used by Cloud Run.
+    string resource_version = 6;
+    // Flag that indicates that the client expects to watch this resource as well. Not currently used by Cloud Run.
+    bool watch = 7;
+    // Optional encoded string to continue paging.
+    string page_token = 8;
+}
+
+message ListRoutesResponse {
+    // The API version for this call such as "serving.knative.dev/v1".
+    string api_version = 1;
+    // The kind of this resource, in this case always "RouteList".
+    string kind = 2;
+    //  Metadata associated with this Route list.
+    k8s.io.apimachinery.pkg.apis.meta.v1.ListMeta metadata = 3;
+    // List of Routes.
+    repeated Route items = 4;
+    // Locations that could not be reached.
+    repeated string unreachable = 5;
+}
+

@@ -1,0 +1,116 @@
+syntax = "proto3";
+
+package google.cloud.run.v1;
+
+import "google/cloud/run/v1/common.proto";
+import "k8s.io/apimachinery/pkg/apis/meta/v1/generated.proto";
+import "google/api/client.proto";
+
+option go_package = "google.golang.org/genproto/googleapis/cloud/run/v1;run";
+
+service Revisions {
+    option (google.api.default_host) = "run.googleapis.com";
+    option (google.api.oauth_scopes) = "https://www.googleapis.com/auth/cloud-platform";
+
+    // Get information about a revision.
+    rpc GetRevision(GetRevisionRequest) returns (Revision) {}
+    // List revisions.
+    rpc ListRevisions(ListRevisionsRequest) returns (ListRevisionsResponse) {}
+    // Delete a revision.
+    rpc DeleteRevision(DeleteRevisionRequest) returns (k8s.io.apimachinery.pkg.apis.meta.v1.Status) {}
+}
+
+message GetRevisionRequest {
+    // The name of the revision to retrieve. For Cloud Run (fully managed), replace {namespace_id} with the project ID or number.
+    // Authorization requires the following IAM permission on the specified resource name:
+    // run.revisions.get
+    string name = 1;
+}
+
+message Revision {
+    // The API version for this call such as "serving.knative.dev/v1".
+    string api_version = 1;
+    // The kind of this resource, in this case "Revision".
+    string kind = 2;
+    // Metadata associated with this Revision, including name, namespace, labels, and annotations.
+    k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 3;
+    // Spec holds the desired state of the Revision (from the client).
+    RevisionSpec spec = 4;
+    // Status communicates the observed state of the Revision (from the controller).
+    RevisionStatus status = 5;
+}
+
+message RevisionStatus {
+    // ObservedGeneration is the 'Generation' of the Revision that was last processed by the controller.
+    // Clients polling for completed reconciliation should poll until observedGeneration = metadata.generation, 
+    // and the Ready condition's status is True or False.
+    int32 observed_generation = 1;
+    // Conditions communicates information about ongoing/complete reconciliation processes that bring the "spec" 
+    // inline with the observed state of the world.
+    // As a Revision is being prepared, it will incrementally update conditions. 
+    // Revision-specific conditions include:
+    // * "ResourcesAvailable": True when underlying resources have been provisioned. 
+    // * "ContainerHealthy": True when the Revision readiness check completes. 
+    // * "Active": True when the Revision may receive traffic.
+    repeated Condition conditions = 2;
+    // Specifies the generated logging url for this particular revision based on the revision url template specified in the controller's config. 
+    string log_url = 3;
+    // Not currently used by Cloud Run.
+    string service_name = 4;
+    // ImageDigest holds the resolved digest for the image specified within .Spec.Container.Image. The digest is resolved during the creation of Revision. 
+    // This field holds the digest value regardless of whether a tag or digest was originally specified in the Container object.
+    string image_digest = 5;
+}
+
+message ListRevisionsRequest {
+    // The namespace from which the revisions should be listed. For Cloud Run (fully managed), replace {namespace_id} with the project ID or number.
+    // Authorization requires the following IAM permission on the specified resource parent:
+    // run.revisions.list
+    string parent = 1;
+    // The maximum number of records that should be returned.
+    int32 page_size = 2;
+    // Not currently used by Cloud Run
+    bool include_uninitialized = 3;
+    // Allows to filter resources based on a specific value for a field name. Send this in a query string format. i.e. 'metadata.name%3Dlorem'. 
+    // Not currently used by Cloud Run.
+    string field_selector = 4;
+    // Allows to filter resources based on a label. Supported operations are =, !=, exists, in, and notIn.
+    string label_selector = 5;
+    // The baseline resource version from which the list or watch operation should start. Not currently used by Cloud Run.
+    string resource_version = 6;
+    // Flag that indicates that the client expects to watch this resource as well. Not currently used by Cloud Run.
+    bool watch = 7;
+    // Optional encoded string to continue paging.
+    string page_token = 8;
+}
+
+message ListRevisionsResponse {
+    // The API version for this call such as "serving.knative.dev/v1".
+    string api_version = 1;
+    // The kind of this resource, in this case "RevisionList".
+    string kind = 2;
+    // Metadata associated with this revision list.
+    k8s.io.apimachinery.pkg.apis.meta.v1.ListMeta metadata = 3;
+    // List of Revisions.
+    repeated Revision items = 4;
+    // Locations that could not be reached.
+    repeated string unreachable = 5;
+}
+
+message DeleteRevisionRequest {
+    // The name of the revision to delete. For Cloud Run (fully managed), replace {namespace_id} with the project ID or number.
+    // Authorization requires the following IAM permission on the specified resource name:
+    // run.revisions.delete
+    string name = 1;
+    // Specifies the propagation policy of delete. Cloud Run currently ignores this setting, and deletes in the background. 
+    // Please see kubernetes.io/docs/concepts/workloads/controllers/garbage-collection/ for more information.
+    string propagation_policy = 2;
+    // Cloud Run currently ignores this parameter.
+    string kind = 3;
+    // Cloud Run currently ignores this parameter.
+    string api_version = 4;
+    // Indicates that the server should validate the request and populate default values without persisting the request. 
+    // Supported values: all
+    string dry_run = 5;
+}
+

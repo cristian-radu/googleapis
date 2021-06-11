@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+package google.cloud.run.v1;
+
+import "google/api/client.proto";
+
+option go_package = "google.golang.org/genproto/googleapis/cloud/run/v1;run";
+
+service AuthorizedDomains {
+    option (google.api.default_host) = "run.googleapis.com";
+    option (google.api.oauth_scopes) = "https://www.googleapis.com/auth/cloud-platform";    
+
+    // List authorized domains.
+    rpc ListAuthorizedDomains(ListAuthorizedDomainsRequest) returns (ListAuthorizedDomainsResponse) {}
+}
+
+message ListAuthorizedDomainsRequest {
+    // Name of the parent Project resource. Example: projects/myproject.
+    // Authorization requires the following IAM permission on the specified resource parent:
+    // run.authorizeddomains.list
+    string parent = 1;
+    // Maximum results to return per page.
+    int32 page_size = 2;
+    // Continuation token for fetching the next page of results.
+    string page_token = 3;
+}
+
+message ListAuthorizedDomainsResponse {
+    // The authorized domains belonging to the user.
+    repeated AuthorizedDomain domains = 1;
+    // Continuation token for fetching the next page of results.
+    string next_page_token = 2;
+}
+
+message AuthorizedDomain {
+    // DEPRECATED
+    // Deprecated Read only. Full path to the AuthorizedDomain resource in the API. 
+    // Example: projects/myproject/authorizedDomains/example.com.
+    string name = 1;
+    // Relative name of the domain authorized for use. Example: example.com.
+    string id = 2;
+}

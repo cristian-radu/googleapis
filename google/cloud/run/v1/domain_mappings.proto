@@ -1,0 +1,162 @@
+syntax = "proto3";
+
+package google.cloud.run.v1;
+
+import "google/cloud/run/v1/common.proto";
+import "k8s.io/apimachinery/pkg/apis/meta/v1/generated.proto";
+import "google/api/client.proto";
+
+option go_package = "google.golang.org/genproto/googleapis/cloud/run/v1;run";
+
+service DomainMappings {
+    option (google.api.default_host) = "run.googleapis.com";
+    option (google.api.oauth_scopes) = "https://www.googleapis.com/auth/cloud-platform";
+
+    // Create a new domain mapping.
+    rpc CreateDomainMapping(CreateDomainMappingRequest) returns (DomainMapping){}
+    // Delete a domain mapping.
+    rpc DeleteDomainMapping(DeleteDomainMappingRequest) returns (k8s.io.apimachinery.pkg.apis.meta.v1.Status) {}
+    // Get information about a domain mapping.
+    rpc GetDomainMapping(GetDomainMappingRequest) returns (DomainMapping) {}
+    // List domain mappings.
+    rpc ListDomainMappings(ListDomainMappingsRequest) returns (ListDomainMappingsResponse) {}
+}
+
+message CreateDomainMappingRequest {
+    // The namespace in which the domain mapping should be created. For Cloud Run (fully managed), replace {namespace_id} with the project ID or number.
+    // Authorization requires the following IAM permission on the specified resource parent:
+    // run.services.create
+    string parent = 1;
+    // The domain mapping instance to create.
+    DomainMapping domain_mapping = 2;
+    // Indicates that the server should validate the request and populate default values without persisting the request. 
+    // Supported values: all
+    string dry_run = 3;
+}
+
+message DeleteDomainMappingRequest {
+    // The name of the domain mapping to delete. For Cloud Run (fully managed), replace {namespace_id} with the project ID or number.
+    // Authorization requires the following IAM permission on the specified resource name:
+    // run.services.delete
+    string name = 1;
+    // Specifies the propagation policy of delete. Cloud Run currently ignores this setting, and deletes in the background. 
+    // Please see kubernetes.io/docs/concepts/workloads/controllers/garbage-collection/ for more information.
+    string propagation_policy = 2;
+    // Cloud Run currently ignores this parameter.
+    string kind = 3;
+    // Cloud Run currently ignores this parameter.
+    string api_version = 4;
+    // Indicates that the server should validate the request and populate default values without persisting the request. 
+    // Supported values: all
+    string dry_run = 5;
+}
+
+message GetDomainMappingRequest {
+    // The name of the domain mapping to retrieve. For Cloud Run (fully managed), replace {namespace_id} with the project ID or number.
+    // Authorization requires the following IAM permission on the specified resource name:
+    // run.services.get
+    string name = 1;
+}
+
+message ListDomainMappingsRequest {
+    // The namespace from which the domain mappings should be listed. For Cloud Run (fully managed), replace {namespace_id} with the project ID or number.
+    // Authorization requires the following IAM permission on the specified resource parent:
+    // run.services.list
+    string parent = 1;
+    // The maximum number of records that should be returned.
+    int32 page_size = 2;
+    // Not currently used by Cloud Run.
+    bool include_uninitialized = 3;
+    // Allows to filter resources based on a specific value for a field name. Send this in a query string format. i.e. 'metadata.name%3Dlorem'. 
+    // Not currently used by Cloud Run.
+    string field_selector = 4;
+    // Allows to filter resources based on a label. Supported operations are =, !=, exists, in, and notIn.
+    string label_selector = 5;
+    // The baseline resource version from which the list or watch operation should start. Not currently used by Cloud Run.
+    string resource_version = 6;
+    // Flag that indicates that the client expects to watch this resource as well. Not currently used by Cloud Run.
+    bool watch = 7;
+    // Optional encoded string to continue paging.
+    string page_token = 8;
+}
+
+message ListDomainMappingsResponse {
+    // The API version for this call such as  "domains.cloudrun.com/v1".
+    string api_version = 1;
+    // The kind of this resource, in this case "DomainMappingList".
+    string kind = 2;
+    // Metadata associated with this DomainMapping list.
+    k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 3;    
+    // List of DomainMappings.
+    repeated DomainMapping items = 4;
+    // Locations that could not be reached.
+    repeated string unreachable = 5;
+}
+
+message DomainMapping {
+    // The API version for this call such as  "domains.cloudrun.com/v1".
+    string api_version = 1;
+    // The kind of this resource, in this case "DomainMapping".
+    string kind = 2;
+    // Metadata associated with this DomainMapping.
+    k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 3;
+    // The spec for this DomainMapping.
+    DomainMappingSpec spec = 4;
+    // The current status of the DomainMapping.
+    DomainMappingStatus status = 5;
+}
+
+message DomainMappingSpec {
+    // The name of the Knative Route that this DomainMapping applies to. The route must exist.
+    string route_name = 1;
+    // The mode of the certificate.
+    enum CertificateMode {
+        CERTIFICATE_MODE_UNSPECIFIED = 0;
+        // Do not provision an HTTPS certificate.
+        NONE = 1;
+        // Automatically provisions an HTTPS certificate via GoogleCA or LetsEncrypt.
+        AUTOMATIC = 2;
+    }
+    // If set, the mapping will override any mapping set before this spec was set. 
+    // It is recommended that the user leaves this empty to receive an error warning about a potential conflict 
+    // and only set it once the respective UI has given such a warning.
+    bool force_override = 3;
+}
+
+message DomainMappingStatus {
+    // Array of observed DomainMappingConditions, indicating the current state of the DomainMapping.
+    repeated Condition conditions = 1;
+    // ObservedGeneration is the 'Generation' of the DomainMapping that was last processed by the controller.
+    // Clients polling for completed reconciliation should poll until observedGeneration = metadata.generation 
+    // and the Ready condition's status is True or False.
+    int32 observed_generation = 2;
+    // The resource records required to configure this domain mapping. 
+    // These records must be added to the domain's DNS configuration in order to serve the application via this domain mapping.
+    repeated ResourceRecord resource_records = 3;
+    // The name of the route that the mapping currently points to.
+    string mapped_route_name = 4;
+    // Cloud Run fully managed: not supported
+    // Cloud Run on GKE: supported
+    // Holds the URL that will serve the traffic of the DomainMapping. 
+    string url = 5;
+}
+
+message ResourceRecord {
+    // Relative name of the object affected by this record. Only applicable for CNAME records. Example: 'www'.
+    string name = 1;
+    // Data for this record. Values vary by record type, as defined in RFC 1035 (section 5) and RFC 1034 (section 3.6.1).
+    string rrdata = 2;
+    // Resource record type. Example: AAAA.
+    enum RecordType {
+        // An unknown resource record.
+        RECORD_TYPE_UNSPECIFIED = 0;
+        // An A resource record. Data is an IPv4 address.
+        A = 1;
+        // An AAAA resource record. Data is an IPv6 address.
+        AAAA = 2;
+        // A CNAME resource record. Data is a domain name to be aliased.
+        CNAME = 3;
+    }
+}
+
+
