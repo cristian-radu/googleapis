@@ -1,0 +1,123 @@
+{
+  "methodConfig": [
+    {
+      "name": [
+        {
+          "service": "google.cloud.run.v1.Services",
+          "method": "CreateService"
+        },
+        {
+          "service": "google.cloud.run.v1.Services",
+          "method": "DeleteService"
+        },
+        {
+          "service": "google.cloud.run.v1.Services",
+          "method": "GetService"
+        },
+        {
+          "service": "google.cloud.run.v1.Services",
+          "method": "GetIamPolicy"
+        },
+        {
+          "service": "google.cloud.run.v1.Services",
+          "method": "ListServices"
+        },
+        {
+          "service": "google.cloud.run.v1.Services",
+          "method": "ReplaceService"
+        },
+        {
+          "service": "google.cloud.run.v1.Services",
+          "method": "SetIamPolicy"
+        },
+        {
+          "service": "google.cloud.run.v1.Services",
+          "method": "TestIamPermissions"
+        }
+      ],
+      "timeout": "600s"
+    },
+    {
+      "name": [
+        {
+          "service": "google.cloud.run.v1.Routes",
+          "method": "GetRoute"
+        },
+        {
+          "service": "google.cloud.run.v1.Routes",
+          "method": "ListRoutes"
+        }
+      ],
+      "timeout": "600s"
+    },
+    {
+      "name": [
+        {
+          "service": "google.cloud.run.v1.Revisions",
+          "method": "GetRevision"
+        },
+        {
+          "service": "google.cloud.run.v1.Revisions",
+          "method": "DeleteRevision"
+        },
+        {
+          "service": "google.cloud.run.v1.Revisions",
+          "method": "ListRevisions"
+        }
+      ],
+      "timeout": "600s"
+    },
+    {
+      "name": [
+        {
+          "service": "google.cloud.run.v1.DomainMappings",
+          "method": "CreateDomainMapping"
+        },
+        {
+          "service": "google.cloud.run.v1.DomainMappings",
+          "method": "DeleteDomainMapping"
+        },
+        {
+          "service": "google.cloud.run.v1.DomainMappings",
+          "method": "GetDomainMapping"
+        },
+        {
+          "service": "google.cloud.run.v1.DomainMappings",
+          "method": "ListDomainMappings"
+        }
+      ],
+      "timeout": "600s"
+    },
+    {
+      "name": [
+        {
+          "service": "google.cloud.run.v1.Configurations",
+          "method": "GetConfiguration"
+        },
+        {
+          "service": "google.cloud.run.v1.Configurations",
+          "method": "ListConfigurations"
+        }
+      ],
+      "timeout": "600s"
+    },
+    {
+      "name": [
+        {
+          "service": "google.cloud.run.v1.AuthorizedDomains",
+          "method": "ListAuthorizedDomains"
+        }
+      ],
+      "timeout": "600s"
+    },
+    {
+      "name": [
+        {
+          "service": "google.cloud.run.v1.Locations",
+          "method": "ListLocations"
+        }
+      ],
+      "timeout": "600s"
+    }
+  ]
+}
