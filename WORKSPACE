@@ -321,7 +321,7 @@ http_archive(
 
 http_archive(
     name = "io_kubernetes_apimachinery",
-    urls = ["https://github.com/cristian-radu/apimachinery/archive/refs/tags/v0.22.0-alpha.4.tar.gz"],
+    urls = ["https://github.com/kubernetes/apimachinery/archive/refs/tags/v0.22.0-alpha.3.tar.gz"],
     build_file = "io_kubernetes_apimachinery.BUILD",
 )
 
