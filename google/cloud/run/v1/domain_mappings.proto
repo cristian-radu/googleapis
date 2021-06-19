@@ -3,7 +3,7 @@ syntax = "proto3";
 package google.cloud.run.v1;
 
 import "google/cloud/run/v1/common.proto";
-import "k8s.io/apimachinery/pkg/apis/meta/v1/generated.proto";
+import "google/cloud/run/v1/metav1.proto";
 import "google/api/client.proto";
 
 option go_package = "google.golang.org/genproto/googleapis/cloud/run/v1;run";
@@ -15,7 +15,7 @@ service DomainMappings {
     // Create a new domain mapping.
     rpc CreateDomainMapping(CreateDomainMappingRequest) returns (DomainMapping){}
     // Delete a domain mapping.
-    rpc DeleteDomainMapping(DeleteDomainMappingRequest) returns (k8s.io.apimachinery.pkg.apis.meta.v1.Status) {}
+    rpc DeleteDomainMapping(DeleteDomainMappingRequest) returns (Status) {}
     // Get information about a domain mapping.
     rpc GetDomainMapping(GetDomainMappingRequest) returns (DomainMapping) {}
     // List domain mappings.
@@ -86,7 +86,7 @@ message ListDomainMappingsResponse {
     // The kind of this resource, in this case "DomainMappingList".
     string kind = 2;
     // Metadata associated with this DomainMapping list.
-    k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 3;    
+    ObjectMeta metadata = 3;    
     // List of DomainMappings.
     repeated DomainMapping items = 4;
     // Locations that could not be reached.
@@ -99,7 +99,7 @@ message DomainMapping {
     // The kind of this resource, in this case "DomainMapping".
     string kind = 2;
     // Metadata associated with this DomainMapping.
-    k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 3;
+    ObjectMeta metadata = 3;
     // The spec for this DomainMapping.
     DomainMappingSpec spec = 4;
     // The current status of the DomainMapping.

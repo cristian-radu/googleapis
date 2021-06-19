@@ -3,7 +3,7 @@ syntax = "proto3";
 package google.cloud.run.v1;
 
 import "google/cloud/run/v1/common.proto";
-import "k8s.io/apimachinery/pkg/apis/meta/v1/generated.proto";
+import "google/cloud/run/v1/metav1.proto";
 import "google/api/client.proto";
 
 option go_package = "google.golang.org/genproto/googleapis/cloud/run/v1;run";
@@ -31,7 +31,7 @@ message Configuration {
     // The kind of resource, in this case always "Configuration"
     string kind = 2;
     // Metadata associated with this Configuration, including name, namespace, labels, and annotations.
-    k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 3;    
+    ObjectMeta metadata = 3;    
     // Spec holds the desired state of the Configuration (from the client).
     ConfigurationSpec spec = 4;
     // Status communicates the observed state of the Configuration (from the controller).
@@ -88,7 +88,7 @@ message ListConfigurationsResponse {
     // The kind of this resource, in this case "ConfigurationList".
     string kind = 2;
     // Metadata associated with this configuration list.
-    k8s.io.apimachinery.pkg.apis.meta.v1.ListMeta metadata = 3;
+    ListMeta metadata = 3;
     // List of Configurations.
     repeated Configuration items = 4;
     // Locations that could not be reached.

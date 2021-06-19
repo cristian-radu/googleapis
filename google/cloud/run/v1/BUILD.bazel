@@ -13,6 +13,8 @@ proto_library(
         "domain_mappings.proto",
         "configurations.proto",
         "authorized_domains.proto",
+        "metav1.proto",
+        "corev1.proto",
     ],
     deps = [
         "//google/iam/v1:iam_policy_proto",
@@ -20,8 +22,6 @@ proto_library(
         "//google/api:field_behavior_proto",
         "//google/api:client_proto",
         "@com_google_protobuf//:timestamp_proto",
-        "@io_kubernetes_api//:core_proto",
-        "@io_kubernetes_apimachinery//:meta_proto",
     ],
 )
 
@@ -45,8 +45,6 @@ go_proto_library(
     importpath = "google.golang.org/genproto/googleapis/cloud/run/v1",
     protos = [":run_proto"],
     deps = [
-        "@io_kubernetes_apimachinery//:meta_go_proto",
-        "@io_kubernetes_api//:core_go_proto",
         "//google/iam/v1:iam_go_proto",
         "//google/api:annotations_go_proto",
     ],
@@ -60,8 +58,6 @@ go_gapic_library(
     service_yaml = "cloudrun.yaml",
     deps = [
         ":run_go_proto",
-        "@io_kubernetes_apimachinery//:meta_go_proto",
-        "@io_kubernetes_api//:core_go_proto",
         "//google/iam/v1:iam_go_proto",
         "@io_bazel_rules_go//proto/wkt:any_go_proto",
         "@io_bazel_rules_go//proto/wkt:duration_go_proto",

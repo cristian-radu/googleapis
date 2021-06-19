@@ -3,7 +3,7 @@ syntax = "proto3";
 package google.cloud.run.v1;
 
 import "google/cloud/run/v1/common.proto";
-import "k8s.io/apimachinery/pkg/apis/meta/v1/generated.proto";
+import "google/cloud/run/v1/metav1.proto";
 import "google/api/client.proto";
 
 option go_package = "google.golang.org/genproto/googleapis/cloud/run/v1;run";
@@ -17,7 +17,7 @@ service Revisions {
     // List revisions.
     rpc ListRevisions(ListRevisionsRequest) returns (ListRevisionsResponse) {}
     // Delete a revision.
-    rpc DeleteRevision(DeleteRevisionRequest) returns (k8s.io.apimachinery.pkg.apis.meta.v1.Status) {}
+    rpc DeleteRevision(DeleteRevisionRequest) returns (Status) {}
 }
 
 message GetRevisionRequest {
@@ -33,7 +33,7 @@ message Revision {
     // The kind of this resource, in this case "Revision".
     string kind = 2;
     // Metadata associated with this Revision, including name, namespace, labels, and annotations.
-    k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 3;
+    ObjectMeta metadata = 3;
     // Spec holds the desired state of the Revision (from the client).
     RevisionSpec spec = 4;
     // Status communicates the observed state of the Revision (from the controller).
@@ -90,7 +90,7 @@ message ListRevisionsResponse {
     // The kind of this resource, in this case "RevisionList".
     string kind = 2;
     // Metadata associated with this revision list.
-    k8s.io.apimachinery.pkg.apis.meta.v1.ListMeta metadata = 3;
+    ListMeta metadata = 3;
     // List of Revisions.
     repeated Revision items = 4;
     // Locations that could not be reached.

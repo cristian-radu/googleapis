@@ -312,19 +312,6 @@ load("@com_googleapis_gapic_generator_go//rules_go_gapic:go_gapic_repositories.b
 
 go_gapic_repositories()
 
-http_archive(
-    name = "io_kubernetes_api",
-    urls = ["https://github.com/kubernetes/api/archive/v0.21.1.tar.gz"],
-    sha256 = "e985c5034f7bbf1c8853061b31d464323fabd1400bf330fc8374802e244836dd",
-    build_file = "io_kubernetes_api.BUILD",
-)
-
-http_archive(
-    name = "io_kubernetes_apimachinery",
-    urls = ["https://github.com/cristian-radu/apimachinery/archive/refs/tags/v0.22.0-alpha.4.tar.gz"],
-    build_file = "io_kubernetes_apimachinery.BUILD",
-)
-
 ##############################################################################
 # TypeScript
 ##############################################################################

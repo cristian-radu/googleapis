@@ -3,7 +3,7 @@ syntax = "proto3";
 package google.cloud.run.v1;
 
 import "google/cloud/run/v1/common.proto";
-import "k8s.io/apimachinery/pkg/apis/meta/v1/generated.proto";
+import "google/cloud/run/v1/metav1.proto";
 import "google/api/client.proto";
 
 option go_package = "google.golang.org/genproto/googleapis/cloud/run/v1;run";
@@ -31,7 +31,7 @@ message Route {
     // The kind of this resource, in this case always "Route".
     string kind = 2;
     // Metadata associated with this Route, including name, namespace, labels, and annotations.
-    k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 3;
+    ObjectMeta metadata = 3;
     // Spec holds the desired state of the Route (from the client).
     RouteSpec spec = 4;
     // Status communicates the observed state of the Route (from the controller).
@@ -90,7 +90,7 @@ message ListRoutesResponse {
     // The kind of this resource, in this case always "RouteList".
     string kind = 2;
     //  Metadata associated with this Route list.
-    k8s.io.apimachinery.pkg.apis.meta.v1.ListMeta metadata = 3;
+    ListMeta metadata = 3;
     // List of Routes.
     repeated Route items = 4;
     // Locations that could not be reached.

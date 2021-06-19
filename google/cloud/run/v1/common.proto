@@ -2,8 +2,8 @@ syntax = "proto3";
 
 package google.cloud.run.v1;
 
-import "k8s.io/api/core/v1/generated.proto";
-import "k8s.io/apimachinery/pkg/apis/meta/v1/generated.proto";
+import "google/cloud/run/v1/corev1.proto";
+import "google/cloud/run/v1/metav1.proto";
 import "google/protobuf/timestamp.proto";
 
 option go_package = "google.golang.org/genproto/googleapis/cloud/run/v1;run";
@@ -71,8 +71,8 @@ message RevisionSpec {
     // In the context of a Revision, we disallow a number of fields on this Container, including: name and lifecycle. 
     // In Cloud Run, only a single container may be provided. 
     // The runtime contract is documented here: https://github.com/knative/serving/blob/master/docs/runtime-contract.md
-    repeated k8s.io.api.core.v1.Container containers = 4;
-    repeated k8s.io.api.core.v1.Volume volumes = 5;
+    repeated Container containers = 4;
+    repeated Volume volumes = 5;
 }
 
 message RevisionTemplate {
@@ -84,7 +84,7 @@ message RevisionTemplate {
     // run.googleapis.com/vpc-access-connector sets a Serverless VPC Access connector.
     // run.googleapis.com/vpc-access-egress sets VPC egress. Supported values are all-traffic, all (deprecated), and private-ranges-only. 
     // all-traffic and all provide the same functionality. all is deprecated but will continue to be supported. Prefer all-traffic.
-    k8s.io.apimachinery.pkg.apis.meta.v1.ObjectMeta metadata = 1;
+    ObjectMeta metadata = 1;
     // RevisionSpec holds the desired state of the Revision (from the client).
     RevisionSpec spec = 2;
 }
