@@ -76,7 +76,6 @@ moved_proto_library(
 
 py_proto_library(
     name = "language_py_proto",
-    plugin = "@protoc_docs_plugin//:docs_plugin",
     deps = [":language_moved_proto"],
 )
 
@@ -91,8 +90,8 @@ py_grpc_library(
 ##############################################################################
 load(
     "@com_google_googleapis_imports//:imports.bzl",
-    php_grpc_library = "php_grpc_library2",
-    php_proto_library = "php_proto_library2",
+    "php_grpc_library",
+    "php_proto_library",
 )
 
 php_proto_library(
