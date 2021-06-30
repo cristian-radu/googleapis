@@ -152,7 +152,7 @@ message ServiceSpec {
     // Template holds the latest specification for the Revision to be stamped out.
     RevisionTemplate template = 1;
     // Traffic specifies how to distribute traffic over a collection of Knative Revisions and Configurations.
-    repeated TrafficTarget target = 2;
+    repeated TrafficTarget traffic = 2;
 }
 
 message ServiceStatus {
