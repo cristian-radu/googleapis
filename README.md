@@ -1,4 +1,4 @@
-### This fork holds a version of the Cloud Run proto definitions along with associated Bazel configuration required to generate Go the gRPC client. 
+### This fork holds a version of the Cloud Run proto definitions along with associated Bazel configuration required to generate the Go gRPC client. 
 ### Why? The offical definitions were not available and I really wanted a gRPC client for Go :). 
 
 ```sh
